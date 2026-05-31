@@ -8,6 +8,12 @@ qt_standard_project_setup()
 qt_add_executable(CheckNodeCoverage
     main.cpp
     structures.h
+    inputProcessing.h
+    inputProcessing.cpp
+    coverageAnalysis.h
+    coverageAnalysis.cpp
+    outputGeneration.h
+    outputGeneration.cpp
 )
 
 target_link_libraries(CheckNodeCoverage
