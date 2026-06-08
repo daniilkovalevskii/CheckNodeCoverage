@@ -3,6 +3,8 @@
 ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
 {
     ParseResult result;
+    result.root = nullptr;
+
     return result;
 }
 
