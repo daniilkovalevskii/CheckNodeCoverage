@@ -1,0 +1,20 @@
+digraph Tree {
+    subgraph G {
+        a -> b;
+        a -> c;
+        c -> d;
+    }
+    node [style = invis];    
+    edge [style = invis];
+    c -> e;
+    d -> f;
+    b -> g;
+    b -> h;
+    b -> i;
+    h -> j;
+    j -> k;
+    b[shape = diamond];
+    k[shape = rectangle];
+    f[shape = rectangle];
+    g[shape = rectangle];
+}
