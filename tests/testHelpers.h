@@ -126,4 +126,36 @@ void showErrorLog(const QSet<Error>& actual, const QSet<Error>& expected)
     }
 }
 
+// Функция для построения дерева программно
+Node* buildTree(const QVector<QPair<QString, QString>>& edges, QMap<QString, Node*>& outNodes)
+{
+    outNodes.clear();
+
+    for (const auto& edge : edges)
+    {
+        if (!outNodes.contains(edge.first))
+            outNodes[edge.first] = new Node(edge.first);
+        if (!outNodes.contains(edge.second))
+            outNodes[edge.second] = new Node(edge.second);
+
+        Node* parent = outNodes[edge.first];
+        Node* child = outNodes[edge.second];
+
+        if (child->parent == nullptr)
+        {
+            child->parent = parent;
+            parent->children.append(child);
+        }
+    }
+
+    for (Node* node : outNodes)
+    {
+        if (node->parent == nullptr) {
+            return node;
+        }
+    }
+
+    return nullptr;
+}
+
 #endif // TESTHELPERS_H
