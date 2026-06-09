@@ -5,6 +5,7 @@ CONFIG -= app_bundle
 TARGET = all_tests
 TEMPLATE = app
 
+HEADERS += testHelpers.h
 SOURCES += allTests.cpp
 
 HEADERS += ../CheckNodeCoverage/inputProcessing.h \
