@@ -158,4 +158,98 @@ Node* buildTree(const QVector<QPair<QString, QString>>& edges, QMap<QString, Nod
     return nullptr;
 }
 
+struct ExpectedNodeProfile
+{
+    QString name;
+    NodeShape shape;
+    QString parentName;
+    QStringList childNames;
+};
+
+// Функция для проверки построенного дерева
+bool treeMatchesExpectedProfile(const QMap<QString, Node*>& allNodes,
+                                const QVector<ExpectedNodeProfile>& expectedProfiles,
+                                QString& outError)
+{
+    QStringList errorList;
+
+    // Проверяем состав узлов
+    QSet<QString> actualNames;
+    for (auto it = allNodes.constBegin(); it != allNodes.constEnd(); ++it)
+    {
+        actualNames.insert(it.key());
+    }
+
+    QSet<QString> expectedNames;
+    for (const auto& p : expectedProfiles)
+    {
+        expectedNames.insert(p.name);
+    }
+
+    if (actualNames != expectedNames)
+    {
+        QStringList missing = (expectedNames - actualNames).values();
+        QStringList unexpected = (actualNames - expectedNames).values();
+        if (!missing.isEmpty())
+            errorList << "Отсутствуют: " + missing.join(", ");
+        if (!unexpected.isEmpty())
+            errorList << "Лишние: " + unexpected.join(", ");
+    }
+
+    // Проверяем свойства каждого ожидаемого узла
+    for (const ExpectedNodeProfile& profile : expectedProfiles)
+    {
+        if (allNodes.contains(profile.name))
+        {
+            Node* n = allNodes[profile.name];
+
+            // Проверка формы узла
+            if (n->shape != profile.shape)
+            {
+                errorList << QString("Узел '%1': неверная форма (ожид. %2, пол. %3)")
+                                 .arg(profile.name)
+                                 .arg(static_cast<int>(profile.shape))
+                                 .arg(static_cast<int>(n->shape));
+            }
+
+            // Проверка родителя
+            QString actualParentName = n->parent ? n->parent->name : "";
+            if (actualParentName != profile.parentName)
+            {
+                errorList << QString("Узел '%1': неверный родитель (ожид. '%2', пол. '%3')")
+                                 .arg(profile.name, profile.parentName, actualParentName);
+            }
+
+            // Проверка детей
+            QStringList actualChildrenNames;
+            for (Node* child : n->children)
+            {
+                if (child)
+                    actualChildrenNames << child->name;
+            }
+
+            // Создаем копию для сортировки
+            QStringList expectedChildrenNames = profile.childNames;
+            actualChildrenNames.sort();
+            expectedChildrenNames.sort();
+
+            if (actualChildrenNames != expectedChildrenNames) {
+                errorList << QString("Узел '%1': списки детей не совпадают (ожид. [%2], пол. [%3])")
+                                 .arg(profile.name)
+                                 .arg(expectedChildrenNames.join(", "))
+                                 .arg(actualChildrenNames.join(", "));
+            }
+        }
+    }
+
+    // Формируем итоговый результат
+    if (!errorList.isEmpty())
+    {
+        outError = errorList.join(" | ");
+        return false;
+    }
+
+    return true;
+}
+
 #endif // TESTHELPERS_H
