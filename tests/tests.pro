@@ -6,7 +6,7 @@ TARGET = all_tests
 TEMPLATE = app
 
 HEADERS += testHelpers.h
-SOURCES += allTests.cpp
+SOURCES += allTests.cpp testParseDOT.cpp
 
 HEADERS += ../CheckNodeCoverage/inputProcessing.h \
            ../CheckNodeCoverage/coverageAnalysis.h \
