@@ -1,0 +1,9 @@
+digraph Tree {
+    a[shape = rectangle];
+    a -> b;
+    a -> c -> d -> e;
+    
+    c[shape = rectangle];
+    d[shape = rectangle];
+    e[shape = rectangle];
+}
