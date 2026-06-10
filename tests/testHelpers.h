@@ -6,6 +6,9 @@
 #include <QDebug>
 #include "QTest"
 
+typedef QVector<QPair<QString, QString>> EdgeList;
+Q_DECLARE_METATYPE(EdgeList)
+
 // Функция для чтения строк из файла
 QStringList readDotFile(const QString& relativePath)
 {

@@ -3,9 +3,6 @@
 #include "../CheckNodeCoverage/structures.h"
 #include "../CheckNodeCoverage/inputProcessing.h"
 
-typedef QVector<QPair<QString, QString>> EdgeList;
-Q_DECLARE_METATYPE(EdgeList)
-
 class FindComponentRoot : public QObject
 {
     Q_OBJECT;
