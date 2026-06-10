@@ -6,7 +6,8 @@ TARGET = all_tests
 TEMPLATE = app
 
 HEADERS += testHelpers.h
-SOURCES += allTests.cpp testParseDOT.cpp testFindComponentRoot.cpp
+SOURCES += allTests.cpp testParseDOT.cpp testFindComponentRoot.cpp \
+    testDfsValidate.cpp
 
 HEADERS += ../CheckNodeCoverage/inputProcessing.h \
            ../CheckNodeCoverage/coverageAnalysis.h \
