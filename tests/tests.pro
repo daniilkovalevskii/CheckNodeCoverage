@@ -7,7 +7,8 @@ TEMPLATE = app
 
 HEADERS += testHelpers.h
 SOURCES += allTests.cpp testParseDOT.cpp testFindComponentRoot.cpp \
-    testDfsValidate.cpp
+    testDfsValidate.cpp \
+    testValidateStructure.cpp
 
 HEADERS += ../CheckNodeCoverage/inputProcessing.h \
            ../CheckNodeCoverage/coverageAnalysis.h \
