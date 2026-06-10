@@ -3,7 +3,7 @@
 #include "../CheckNodeCoverage/structures.h"
 #include "../CheckNodeCoverage/inputProcessing.h"
 
-class FindComponentRoot : public QObject
+class TestFindComponentRoot : public QObject
 {
     Q_OBJECT;
 

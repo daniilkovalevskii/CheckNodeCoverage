@@ -3,12 +3,12 @@
 #include "../CheckNodeCoverage/inputProcessing.h"
 #include "../CheckNodeCoverage/structures.h"
 
-class testParseDot : public QObject
+class TestParseDot : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void testParser_data()
+    void testParseDOT_data()
     {
         QTest::addColumn<QString>("filePath");
         QTest::addColumn<QSet<Error>>("expectedErrors");
@@ -183,7 +183,7 @@ private slots:
             << "a";
     }
 
-    void testParser()
+    void testParseDOT()
     {
         QFETCH(QString, filePath);
         QFETCH(QSet<Error>, expectedErrors);

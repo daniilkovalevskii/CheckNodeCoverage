@@ -8,10 +8,10 @@ int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
     int result = 0;
 
-    testParseDot testParseDot;
+    TestParseDot testParseDot;
     result |= QTest::qExec(&testParseDot, argc, argv);
 
-    FindComponentRoot testFindComponentRoot;
+    TestFindComponentRoot testFindComponentRoot;
     result |= QTest::qExec(&testFindComponentRoot, argc, argv);
 
     TestDfsValidate testDfsValidate;
