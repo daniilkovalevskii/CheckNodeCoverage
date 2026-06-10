@@ -3,6 +3,7 @@
 #include "testFindComponentRoot.cpp"
 #include "testDfsValidate.cpp"
 #include "testValidateStructure.cpp"
+#include "testDfsCovered.cpp"
 
 int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
@@ -19,6 +20,9 @@ int main(int argc, char* argv[]) {
 
     TestValidateStructure testValidateStructure;
     result |= QTest::qExec(&testValidateStructure, argc, argv);
+
+    TestDfsCovered testDfsCovered;
+    result |= QTest::qExec(&testDfsCovered, argc, argv);
 
     return result;
 }
