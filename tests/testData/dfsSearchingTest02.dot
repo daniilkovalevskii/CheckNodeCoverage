@@ -1,0 +1,6 @@
+digraph Tree {
+    target[shape = diamond];
+    target -> b;
+    b -> c;
+    b -> d;
+}
