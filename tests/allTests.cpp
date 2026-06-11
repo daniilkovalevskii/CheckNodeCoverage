@@ -4,6 +4,7 @@
 #include "testDfsValidate.cpp"
 #include "testValidateStructure.cpp"
 #include "testDfsCovered.cpp"
+#include "testDfsSearching.cpp"
 
 int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
@@ -23,6 +24,9 @@ int main(int argc, char* argv[]) {
 
     TestDfsCovered testDfsCovered;
     result |= QTest::qExec(&testDfsCovered, argc, argv);
+
+    TestDfsSearching testDfsSearching;
+    result |= QTest::qExec(&testDfsSearching, argc, argv);
 
     return result;
 }
