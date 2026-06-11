@@ -1,0 +1,24 @@
+digraph Tree {
+    target[shape = diamond];
+    root -> a -> target;
+    root -> o;
+    o -> p;
+    o -> q;
+    target -> c;
+    target -> b;
+    b -> d;
+    b -> e;
+    d -> f;
+    d -> g;
+    e -> h;
+    h -> i;
+    i -> j;
+    i -> k;
+    f -> l;
+    b -> m;
+    b -> n;
+    
+    c[shape = rectangle];
+    n[shape = rectangle];
+    q[shape = rectangle];
+} 
