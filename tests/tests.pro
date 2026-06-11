@@ -7,6 +7,7 @@ TEMPLATE = app
 
 HEADERS += testHelpers.h
 SOURCES += allTests.cpp testParseDOT.cpp testFindComponentRoot.cpp \
+    testDfsAbove.cpp \
     testDfsCovered.cpp \
     testDfsSearching.cpp \
     testDfsValidate.cpp \
