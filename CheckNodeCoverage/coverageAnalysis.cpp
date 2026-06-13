@@ -4,7 +4,23 @@
 
 void dfsAbove(Node* node, QSet<Error>& errors, Result& result)
 {
-    return;
+    // Если текущий узел является целевым, запускаем от него dfsSearching
+    if (node->shape == NodeShape::DIAMOND)
+    {
+        dfsSearching(node, errors, result);
+        return;
+    }
+    // Иначе Если текущий узел отмечен - добавляем ошибку
+    else if (node->shape == NodeShape::RECTANGLE)
+    {
+        errors.insert(Error(ErrorType::NOT_DESCENDANT, node->name));
+    }
+
+    // Продолжаем поиск по всем детям
+    for (Node* child : node->children)
+    {
+        dfsAbove(child, errors, result);
+    }
 }
 
 CoverageStatus dfsSearching(Node* node, QSet<Error>& errors, Result& result)
