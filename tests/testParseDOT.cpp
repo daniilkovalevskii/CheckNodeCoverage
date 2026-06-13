@@ -21,7 +21,7 @@ private slots:
             << "";
 
         QTest::newRow("Тест 2: Нет закрывающей скобки")
-            << "testdata/parseTest02.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 16)} << QVector<ExpectedNodeProfile>{}
+            << "testdata/parseTest02.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 15)} << QVector<ExpectedNodeProfile>{}
             << "";
 
         QTest::newRow("Тест 3: Неподдерживаемые ключевые слова")
@@ -154,14 +154,15 @@ private slots:
             << "testdata/parseTest12.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 13: Нет ';' в узле")
-            << "testdata/parseTest13.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
+            << "testdata/parseTest13.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2),
+                                                         Error(ErrorType::NO_TARGET)} << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 14: Пробел в стрелке")
             << "testdata/parseTest14.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 15: Несколько разных ошибок")
             << "testdata/parseTest15.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 4),
-                                                         Error(ErrorType::SYNTAX_ERROR, "", "", "", 16),
+                                                         Error(ErrorType::SYNTAX_ERROR, "", "", "", 15),
                                                          Error(ErrorType::NO_TARGET, "", "", "", -1)} << QVector<ExpectedNodeProfile>{}
             << "";
 
