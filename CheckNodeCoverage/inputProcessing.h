@@ -2,6 +2,7 @@
 #define INPUTPROCESSING_H
 #include "structures.h"
 
+QStringList readFile(const QString& filepath, QSet<Error>& errors);
 
 // Функция для парсинга входного файла .dot
 ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors);

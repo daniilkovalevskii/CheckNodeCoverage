@@ -2,6 +2,38 @@
 #include <QSet>
 #include <QRegularExpression>
 #include <QStack>
+#include <QFile>
+
+QStringList readFile(const QString& filepath, QSet<Error>& errors)
+{
+    QStringList lines;
+
+    // Открываем входной файл для чтения в текстовом режиме
+    QFile file(filepath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        // Выводим критическую ошибку в консоль
+        qCritical().noquote() << "Входной файл не найден или недоступен для чтения.\n"
+                                 "Проверьте правильность пути:" << filepath;
+
+        // Заносим ошибку в массив ошибок для отчета
+        errors.insert(Error(ErrorType::FILE_ERROR, "", "", filepath, -1));
+        return lines;
+    }
+
+    QTextStream in(&file);
+
+    // Построчно считываем весь файл до самого конца
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        lines.append(line);
+    }
+
+    // Закрываем файл после успешного чтения
+    file.close();
+    return lines;
+}
 
 ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
 {
