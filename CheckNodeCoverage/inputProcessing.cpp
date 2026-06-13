@@ -356,8 +356,25 @@ void dfsValidate(Node* node, QSet<Node*>& visited, QStack<Node*>& stack, QSet<Er
 
 bool findComponentRoot(Node* node, const QSet<Node*>& visited, Node*& outRoot)
 {
-    outRoot = nullptr;
-    return false;
+    QSet<Node*> alreadyVisited;
+    Node* currNode = node;
+    // Пока у текущего узла есть родитель(он не является корнем) и он еще не был посещен глобально
+    while (currNode->parent != nullptr && !visited.contains(currNode->parent))
+    {
+        // Если в ходе работы функции мы уже посещали родителя текущего узла - значит есть цикл и мы вернем родителя текущего узла
+        if (alreadyVisited.contains(currNode->parent))
+        {
+            outRoot = currNode->parent;
+            return false;
+        }
+        // Добавляем в посещенные текущий узел
+        alreadyVisited.insert(currNode);
+        // Считаем текущим узлом родителя текущего узла
+        currNode = currNode->parent;
+    }
+    // Считать найденным текущий узел
+    outRoot = currNode;
+    return true;
 }
 
 void validateStructure(Node* root, QSet<Error>& errors, const QMap<QString, Node*>& allNodes)
