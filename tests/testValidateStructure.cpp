@@ -45,12 +45,12 @@ private slots:
                                                                                                     {"f", "g"},
                                                                                                     {"g", "e"}}
                                                                                         << QSet<Error>{Error(ErrorType::CONNECTIVITY_ERROR, "a", "e", "", -1),
-                                                                                                       Error(ErrorType::CYCLE_ERROR, "", "", "e->f->g", -1)}
+                                                                                                       Error(ErrorType::CYCLE_ERROR, "", "", "e->f->g->e", -1)}
                                                                                         << "a";
 
         QTest::newRow("Тест 5: Граф состоит из цикла") << EdgeList{{"a", "b"},
                                                                    {"b", "c"},
-                                                                   {"с", "d"},
+                                                                   {"c", "d"},
                                                                    {"d", "a"}}
                                                        << QSet<Error>{Error(ErrorType::CYCLE_ERROR, "", "", "a->b->c->d->a", -1),
                                                                       Error(ErrorType::NO_ROOT)}
@@ -84,7 +84,7 @@ private slots:
                                                                                                                           {"f", "h"},
                                                                                                                           {"f", "e"}}
                                                                                                               << QSet<Error>{Error(ErrorType::CONNECTIVITY_ERROR, "a", "f", "", -1),
-                                                                                                                             Error(ErrorType::CYCLE_ERROR, "", "", "h->g->f->h", -1)}
+                                                                                                                             Error(ErrorType::CYCLE_ERROR, "", "", "f->h->g->f", -1)}
                                                                                                               << "a";
 
         QTest::newRow("Тест 9: Граф состоит из двух несвязных компонент, сожержащих цикл") << EdgeList{{"a", "b"},
@@ -97,7 +97,7 @@ private slots:
                                                                                                        {"f", "h"},
                                                                                                        {"f", "e"}}
                                                                                            << QSet<Error>{Error(ErrorType::NO_ROOT),
-                                                                                                          Error(ErrorType::CYCLE_ERROR, "", "", "h->g->f->h", -1),
+                                                                                                          Error(ErrorType::CYCLE_ERROR, "", "", "f->h->g->f", -1),
                                                                                                           Error(ErrorType::CYCLE_ERROR, "", "", "a->b->c->a", -1)}
                                                                                            << "";
 
