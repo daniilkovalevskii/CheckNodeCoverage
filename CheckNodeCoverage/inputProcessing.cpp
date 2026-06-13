@@ -379,5 +379,40 @@ bool findComponentRoot(Node* node, const QSet<Node*>& visited, Node*& outRoot)
 
 void validateStructure(Node* root, QSet<Error>& errors, const QMap<QString, Node*>& allNodes)
 {
-    return;
+    QSet<Node*> visited;
+    QStack<Node*> stack;
+
+    // Если в дереве нет корня - добавляем ошибку
+    if (root == nullptr)
+    {
+        errors.insert(Error(ErrorType::NO_ROOT));
+    }
+    // Иначе запускаем поиск циклов от корня
+    else
+    {
+        dfsValidate(root, visited, stack, errors);
+    }
+
+    // Независимо от того есть корень или нет, проходим по словарю узлов
+    // Если корень есть - мы пройдем по остальным узлам в словаре и проверим, есть ли несвязные компоненты и циклы в них
+    // Если корня нет - мы будем искать циклы
+    for (Node* node : allNodes)
+    {
+        if (!visited.contains(node))
+        {
+            // Ищем корень компоненты
+            Node* componentRoot;
+            findComponentRoot(node, visited, componentRoot);
+
+            // Если дерево содержит корень, добавляем ошибку связности
+            if (root != nullptr)
+            {
+                errors.insert(Error(ErrorType::CONNECTIVITY_ERROR, QString("%1").arg(root->name), QString("%1").arg(componentRoot->name)));
+            }
+
+            // Очищаем стэк, ищем циклы от корня компоненты
+            stack.clear();
+            dfsValidate(componentRoot, visited, stack, errors);
+        }
+    }
 }
