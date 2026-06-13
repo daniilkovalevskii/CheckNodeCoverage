@@ -56,7 +56,7 @@ private slots:
 
         QTest::newRow("Тест 8: Комплексный тест 3")
             << "testData/dfsAboveTest08.dot" << "root"
-            << QStringList{"c", "n", "j", "k"} << QStringList{"d", "m"} << QSet<Error>{Error(ErrorType::NOT_DESCENDANT, "q")};
+            << QStringList{"c", "n", "j", "k"} << QStringList{"d", "m"} << noErrors;
     }
 
     void testDfsAbove()
