@@ -15,38 +15,42 @@ private slots:
         QTest::addColumn<QString>("activeMarkedNode");
         QTest::addColumn<QSet<Error>>("expErrors");
 
-        QSet<Error> noErrors;
         QTest::newRow("Тест 1: Переданный отмеченный узел не имеет детей") << QString("testData/dfsCoveredTest01.dot")
                                                                            << "a"
-                                                                           << noErrors;
+                                                                           << QSet<Error>{Error(ErrorType::NO_TARGET)};
 
         QTest::newRow("Тест 2: У отмеченного узла есть неотмеченные дети") << QString("testData/dfsCoveredTest02.dot")
                                                                            << "a"
-                                                                           << noErrors;
+                                                                           << QSet<Error>{Error(ErrorType::NO_TARGET)};
 
         QTest::newRow("Тест 3: У отмеченного узла есть отмеченный ребенок") << QString("testData/dfsCoveredTest03.dot")
                                                                             << "a"
-                                                                            << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "b", "a", "", -1)};
+                                                                            << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "b", "a", "", -1),
+                                                                                           Error(ErrorType::NO_TARGET)};
 
         QTest::newRow("Тест 4: У отмеченного узла есть несколько отмеченных детей") << QString("testData/dfsCoveredTest04.dot")
                                                                                     << "a"
                                                                                     << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "b", "a", "", -1),
-                                                                                                   Error(ErrorType::REDUNDANT_NODE, "c", "a", "", -1)};
+                                                                                                   Error(ErrorType::REDUNDANT_NODE, "c", "a", "", -1),
+                                                                                                   Error(ErrorType::NO_TARGET)};
 
         QTest::newRow("Тест 5: Отмеченный узел глубоко в поддереве") << QString("testData/dfsCoveredTest05.dot")
                                                                      << "a"
-                                                                     << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "g", "a", "", -1)};
+                                                                     << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "g", "a", "", -1),
+                                                                                    Error(ErrorType::NO_TARGET)};
 
         QTest::newRow("Тест 6: Цепочка отмеченных узлов") << QString("testData/dfsCoveredTest06.dot")
                                                           << "a"
                                                           << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "c", "a", "", -1),
                                                                          Error(ErrorType::REDUNDANT_NODE, "d", "a", "", -1),
-                                                                         Error(ErrorType::REDUNDANT_NODE, "e", "a", "", -1)};
+                                                                         Error(ErrorType::REDUNDANT_NODE, "e", "a", "", -1),
+                                                                         Error(ErrorType::NO_TARGET)};
 
         QTest::newRow("Тест 7: Цепочка отмеченных узлов") << QString("testData/dfsCoveredTest07.dot")
                                                           << "a"
                                                           << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "m", "a", "", -1),
-                                                                         Error(ErrorType::REDUNDANT_NODE, "j", "a", "", -1)};
+                                                                         Error(ErrorType::REDUNDANT_NODE, "j", "a", "", -1),
+                                                                         Error(ErrorType::NO_TARGET)};
     }
 
     void testDfsCovered()
