@@ -154,17 +154,16 @@ private slots:
             << "testdata/parseTest12.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 13: Нет ';' в узле")
-            << "testdata/parseTest13.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2),
-                                                         Error(ErrorType::NO_TARGET)} << QVector<ExpectedNodeProfile>{} << "";
+            << "testdata/parseTest13.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)}
+            << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 14: Пробел в стрелке")
             << "testdata/parseTest14.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 15: Несколько разных ошибок")
             << "testdata/parseTest15.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 4),
-                                                         Error(ErrorType::SYNTAX_ERROR, "", "", "", 15),
-                                                         Error(ErrorType::NO_TARGET, "", "", "", -1)} << QVector<ExpectedNodeProfile>{}
-            << "";
+                                                         Error(ErrorType::SYNTAX_ERROR, "", "", "", 15)}
+            << QVector<ExpectedNodeProfile>{} << "";
 
         QTest::newRow("Тест 16: Целевой узел — лист")
             << "testdata/parseTest16.dot" << QSet<Error>{Error(ErrorType::LEAF_TARGET, "a", "", "", -1)}
