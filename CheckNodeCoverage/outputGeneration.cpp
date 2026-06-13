@@ -6,7 +6,66 @@
 
 bool generateReport(const QString& outPath, const QSet<Error>& errors, const Result& result)
 {
-    return false;
+    // Открыть выходной файл для записи
+    QFile file(outPath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        // Если открыть не удалось - вывести ошибку в консоль как критический системный сбой
+        qCritical().noquote() << "Неверно указан файл для выходных данных(отчет). Возможно указанного расположения не существует или нет прав на запись.\n"
+                                 "Путь к файлу отчета:" << outPath;
+        return false;
+    }
+
+    QTextStream out(&file);
+
+    // Если result.valid пуст и result.missing пуст(это значит, что из-за критических синтаксических ошибок граф вообще не был построен и проанализирован)
+    if (result.valid.isEmpty() && result.missing.isEmpty())
+    {
+        // Для каждой ошибки создать сообщение
+        for (const Error& err : errors)
+        {
+            out << err.generateMessage() << "\n";
+        }
+    }
+    // Иначе
+    else
+    {
+        // Если result.missing пуст:
+        if (result.missing.isEmpty())
+        {
+            out << "Целевой узел ПОКРЫТ\n";
+        }
+        // Иначе:
+        else
+        {
+            out << "Целевой узел НЕ ПОКРЫТ\n";
+
+            // Собираем имена недостающих узлов через запятую
+            QStringList missingNames;
+            for (Node* node : result.missing)
+            {
+                if (node != nullptr)
+                {
+                    missingNames.append(node->name);
+                }
+            }
+            // Записываем недостающие узлы
+            out << "Недостающие узлы: " << missingNames.join(", ") << "\n";
+        }
+
+        // Если среди errors есть ошибки NOT_DESCENDANT или REDUNDANT_NODE тоже их записываем
+        for (const Error& err : errors)
+        {
+            if (err.type == ErrorType::NOT_DESCENDANT || err.type == ErrorType::REDUNDANT_NODE)
+            {
+                out << err.generateMessage() << "\n";
+            }
+        }
+    }
+
+    // Закрыть файл
+    file.close();
+    return true;
 }
 
 bool generateOutputDOT(const QString& outPath, QSet<Error>& errors, QStringList& lines, const Result& result)
@@ -66,4 +125,5 @@ bool generateOutputDOT(const QString& outPath, QSet<Error>& errors, QStringList&
 
     // Закрыть файл
     file.close();
+    return true;
 }
