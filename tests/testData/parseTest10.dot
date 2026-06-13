@@ -12,6 +12,6 @@ digraph Tree {
     j -> k;
     b[shape = diamond];
     k[shape = rectangle];
-    f[shape = recrangle];
+    f[shape = rectangle];
     g[shape = rectangle];
 }
