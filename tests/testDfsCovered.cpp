@@ -66,15 +66,23 @@ private slots:
         bool testPassed = true;
         QStringList msgs;
 
-        if (actualErrors.isEmpty())
+        bool hasSyntaxError = false;
+        for (const Error& err : actualErrors) {
+            if (err.type == ErrorType::SYNTAX_ERROR || err.type == ErrorType::FORBIDDEN_STRUCTURE_OR_FORM) {
+                hasSyntaxError = true;
+                break;
+            }
+        }
+
+        if (!hasSyntaxError)
         {
             Node* activeMarkedPtr = parsed.allNodes.value(activeMarkedNode);
 
             if (activeMarkedPtr != nullptr)
             {
+                // Запускаем анализ избыточности покрытия
                 dfsCovered(activeMarkedPtr, activeMarkedPtr, actualErrors);
             }
-
             else
             {
                 msgs << QString("Не найдено переданного отмеченного узла %1 в графе").arg(activeMarkedNode);
