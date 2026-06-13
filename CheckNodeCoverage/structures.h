@@ -23,12 +23,7 @@ public:
     };
 
     ~Node()
-    {
-        for (Node* child : children)
-        {
-            delete child;
-        }
-    }
+    {}
 
     QString name;
     NodeShape shape;
@@ -106,7 +101,7 @@ class Error
                     return QString("Синтаксическая ошибка в описании графа DOT в строке %1.").arg(line);
 
                 case MULTIPLE_TARGETS:
-                    return QString("Обнаружено более одного целевого узла (Узлы %1). Допустим только один целевой узел.").arg(relatedNodeName);
+                    return QString("Обнаружено более одного целевого узла (Узлы %1). Допустим только один целевой узел.").arg(nodeName);
 
                 case NOT_DESCENDANT:
                     return QString("Узел %1 не является потомком целевого узла.").arg(nodeName);
@@ -143,6 +138,7 @@ inline size_t qHash(const Error& key, size_t seed = 0)
 {
     return qHash(static_cast<int>(key.type), seed) ^
            qHash(key.nodeName, seed) ^
+           qHash(key.relatedNodeName, seed) ^
            qHash(key.path, seed) ^
            qHash(key.line, seed);
 }
