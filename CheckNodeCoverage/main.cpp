@@ -1,19 +1,66 @@
 #include <QCoreApplication>
+#include <coverageAnalysis.h>
+#include <inputProcessing.h>
+#include <outputGeneration.h>
+#include <structures.h>
+#include <QSet>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    // Set up code that uses the Qt event loop here.
-    // Call a.quit() or a.exit() to quit the application.
-    // A not very useful example would be including
-    // #include <QTimer>
-    // near the top of the file and calling
-    // QTimer::singleShot(5000, &a, &QCoreApplication::quit);
-    // which quits the application after 5 seconds.
+    // Проверка аргументов командной строки
+    // Ожидаем: ./program <путь_к_входному_dot> <путь_к_выходному_dot> <путь_к_отчету_txt>
+    if (argc < 4)
+    {
+        qCritical().noquote() << "Неверное количество аргументов.\n"
+                                 "Использование: program <input.dot> <output.dot> <report.txt>";
+        return 1;
+    }
 
-    // If you do not need a running Qt event loop, remove the call
-    // to a.exec() or use the Non-Qt Plain C++ Application template.
+    QString inputPath  = argv[1];
+    QString outputPath = argv[2];
+    QString reportPath = argv[3];
 
-    return a.exec();
+    QSet<Error> errors;
+    Result result;
+
+    // Прочитать входной файл в список строк
+    QStringList lines = readFile(inputPath, errors);
+
+    // Если ошибок не обнаружено
+    if (errors.isEmpty() && !lines.isEmpty())
+    {
+        // Выполнить парсинг
+        ParseResult parsed = parseDOT(lines, errors);
+
+        // Выполнить валидацию структуры графа
+        // Запускаем проверку структуры только если парсер не стер граф из-за синтаксического сбоя
+        if (parsed.root != nullptr || !parsed.allNodes.isEmpty())
+        {
+            validateStructure(parsed.root, errors, parsed.allNodes);
+        }
+
+        // Если нет ошибок, анализируем покрытие и формируем выходной .dot
+        if (errors.isEmpty())
+        {
+            dfsAbove(parsed.root, errors, result);
+            generateOutputDOT(outputPath, errors, lines, result);
+        }
+
+        // Формируем отчет
+        generateReport(reportPath, errors, result);
+
+        // Освобождаем память дерева
+        qDeleteAll(parsed.allNodes);
+        parsed.allNodes.clear();
+        parsed.root = nullptr;
+    }
+    else
+    {
+        generateReport(reportPath, errors, result);
+    }
+
+    return 0;
 }
