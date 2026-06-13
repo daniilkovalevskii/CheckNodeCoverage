@@ -24,10 +24,11 @@ private slots:
                                                                  << QStringList{"b", "c"} << noMissing << noErrors;
 
         QTest::newRow("Тест 2: Минимальное покрытие обеспечивается добавлением одного узла") << "testData/dfsSearchingTest02.dot" << "target"
-                                                                                             << noValid << QStringList{"b"} << noErrors;
+                                                                                             << noValid << QStringList{"b"}
+                                                                                             << QSet<Error>{Error(ErrorType::NO_MARKED_NODES)};
 
         QTest::newRow("Тест 3: Несколько вариантов для минимального покрытия(выбираем ближайший к целевому)") << "testData/dfsSearchingTest03.dot" << "target"
-                                                                                                              << noValid << QStringList{"b"} << noErrors;
+                                                                                                              << noValid << QStringList{"b"} << QSet<Error>{Error(ErrorType::NO_MARKED_NODES)};
 
         QTest::newRow("Тест 4: Целевой узел частично покрыт") << "testData/dfsSearchingTest04.dot" << "target"
                                                               << QStringList{"c"} << QStringList{"b"} << noErrors;
