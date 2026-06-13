@@ -7,6 +7,6 @@
 bool generateReport(const QString& outPath, const QSet<Error>& errors, const Result& result);
 
 // Функция для создания выходного файла .dot
-bool generateOutputDOT(const QString& outPath, const QSet<Error>& errors, QStringList& lines, const Result& result);
+bool generateOutputDOT(const QString& outPath, QSet<Error>& errors, QStringList& lines, const Result& result);
 
 #endif // OUTPUTGENERATION_H
