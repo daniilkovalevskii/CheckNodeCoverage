@@ -1,6 +1,7 @@
 #include "inputProcessing.h"
 #include <QSet>
 #include <QRegularExpression>
+#include <QStack>
 
 ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
 {
@@ -320,7 +321,37 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
 
 void dfsValidate(Node* node, QSet<Node*>& visited, QStack<Node*>& stack, QSet<Error>& errors)
 {
-    return;
+    stack.push(node);
+    visited.insert(node);
+
+    // Для каждого ребенка текущего узла
+    for (Node* child : node->children)
+    {
+        // Если ребенок уже в стэке, значит найден цикл
+        if (stack.contains(child))
+        {
+            QString cycleNames;
+            int startIndex = stack.indexOf(child); // Берем индекс ребенка
+
+            // Собираем цикл
+            for (int i = startIndex; i < stack.size(); ++i)
+            {
+                cycleNames.append(stack.at(i)->name);
+                cycleNames.append("->");
+            }
+            // Замыкаем цикл
+            cycleNames.append(child->name);
+            // Добавляем ошибку
+            errors.insert(Error(ErrorType::CYCLE_ERROR, "", "", cycleNames, -1));
+        }
+        // Если ребенок еще не был посещен - запускаем проверку циклов от него
+        else if (!visited.contains(child))
+        {
+            dfsValidate(child, visited, stack, errors);
+        }
+    }
+    // Удаляем узел из стэка
+    stack.pop();
 }
 
 bool findComponentRoot(Node* node, const QSet<Node*>& visited, Node*& outRoot)
