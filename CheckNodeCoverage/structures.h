@@ -4,6 +4,12 @@
 #include <QVector>
 #include <QMap>
 
+/*! \file structures.h
+ *  \brief Объявление основных структур данных, перечислений и классов с методами для анализа графов DOT.
+ */
+
+/*! \brief Перечисление допустимых форм узлов в формате DOT.
+ */
 enum NodeShape
 {
     DIAMOND,
@@ -11,9 +17,16 @@ enum NodeShape
     DEFAULT
 };
 
+
+/*! \brief Класс, представляющий узел графа.
+ */
 class Node
 {
 public:
+    /*! \brief Конструктор узла.
+     *  \param[in] newName Имя узла.
+     *  \param[in] newShape Форма узла (по умолчанию выставляется DEFAULT).
+     */
     Node(QString newName, NodeShape newShape = NodeShape::DEFAULT)
     {
         name = newName;
@@ -22,44 +35,67 @@ public:
         parent = nullptr;
     };
 
+    /*! \brief Деструктор узла.
+     *
+     *  \note В ходе написания кода программы было решено отказаться от рекурсивного удаления содержимого узла,
+     *  так как оно вызывало критическую ошибку SIGABRT.
+     *  Вместо этого используется qDeleteAll, который гарантированно удалит все узлы по одному разу.
+     */
     ~Node()
     {}
 
-    QString name;
-    NodeShape shape;
-    Node* parent;
-    QVector<Node*> children;
+    QString name; /**< Имя узла */
+    NodeShape shape; /**< Форма узла */
+    Node* parent; /**< Указатель на родителя узла (nullptr, если узел является корнем) */
+    QVector<Node*> children; /**< Список указателей на дочерние узлы */
 
+    /*! \brief Проверяет, является ли узел листом дерева.
+     *  \return true, если у узла нет детей; иначе - false.
+     */
     bool isLeaf() const
     {
         return children.isEmpty();
     };
 };
 
+/*! \brief Перечисление поддерживаемых типов ошибок.
+ */
 enum ErrorType
 {
-    FILE_ERROR,
-    OUTPUT_FILE_ERROR,
-    CONNECTIVITY_ERROR,
-    NO_MARKED_NODES,
-    LEAF_TARGET,
-    NO_TARGET,
-    MULTIPLE_TARGETS,
-    CYCLE_ERROR,
-    NOT_DESCENDANT,
-    MULTI_PARENT,
-    REDUNDANT_NODE,
-    NO_ROOT,
-    SYNTAX_ERROR,
-    FORBIDDEN_STRUCTURE_OR_FORM
+    FILE_ERROR, /**< Ошибка чтения входного файла */
+    OUTPUT_FILE_ERROR, /**< Ошибка записи/создания выходного файла */
+    CONNECTIVITY_ERROR, /**< Ошибка связности (создается только для графов, у которых есть корень и несвязные компоненты; для остальных добавляется ошибка NO_ROOT) */
+    NO_MARKED_NODES, /**< Ошибка, сигнализирующая о том, что во входном файле нет отмеченных узлов (с формой RECTANGLE) */
+    LEAF_TARGET, /**< Ошибка, сигнализирующая о том, что целевой узел является листом - проверить его покрытие невозможно */
+    NO_TARGET, /**< Ошибка, сигнализирующая о том, что во входном файле нет целевого узла (с формой DIAMOND) */
+    MULTIPLE_TARGETS, /**< Ошибка, сигнализирующая о том, что во входном файле есть несколько целевых узлов (с формой DIAMOND) */
+    CYCLE_ERROR, /**< Ошибка, сигнализирующая о том, что в описанном графе есть циклы */
+    NOT_DESCENDANT, /**< Ошибка, сигнализирующая о том, что отмеченный узел находится вне поддерева целевого узла */
+    MULTI_PARENT, /**< Ошибка, сигнализирующая о том, что у узла несколько родителей во входном файле */
+    REDUNDANT_NODE, /**< Ошибка, сигнализирующая о том, что отмеченный узел находится в поддереве уже отмеченного узла */
+    NO_ROOT, /**< Ошибка, сигнализирующая о том, что в переданном графе нет корня */
+    SYNTAX_ERROR, /**< Синтаксическая ошибка, привязана к строке файла */
+    FORBIDDEN_STRUCTURE_OR_FORM /**< Ошибка, сигнализирующая о том, что во входном графе используются запрещенные структуры или формы (например, subgraph или сircle) */
 };
 
+/*! \brief Класс, хранящий информацию об ошибке.
+  */
 class Error
 {
     public:
+        /*! \brief Конструктор по умолчанию.
+         */
         Error()
         {
         };
+
+        /*! \brief Конструктор с полной инициализацией полей.
+         *  \param[in] newType Тип ошибки (хранится в перечислении ErrorType)
+         *  \param[in] nodeName1 Имя узла, с которым связана ошибка (если ошибка подразумевает несколько узлов, которые не имеют зависимости друг от друга, то все они помещаются сюда)
+         *  \param[in] nodeName2 Имя второго узла, с которым связана ошибка
+         *  \param[in] newPath Путь для циклов/путь до файла, который не удалось открыть
+         *  \param[in] newLine Номер строки, содержащей ошибку во входном файле (-1, если ошибка не относится к строке или нельзя однозначно утверждать принадлежность к какой-либо строке)
+         */
         Error(ErrorType newType, QString nodeName1 = "", QString nodeName2 = "", QString newPath = "", int newLine = -1)
         {
             type = newType;
@@ -69,12 +105,17 @@ class Error
             line = newLine;
         };
 
-        ErrorType type;
-        QString nodeName;
-        QString relatedNodeName;
-        QString path;
-        int line;
+        ErrorType type; /**< Тип ошибки (хранится в перечислении ErrorType) */
+        QString nodeName; /**< Имя основного узла, связанного с ошибкой
+                            *  (если ошибка подразумевает несколько узлов, которые не имеют зависимости друг от друга,
+                            *  то все они помещаются сюда, например MULTIPLE_TARGETS)*/
+        QString relatedNodeName; /**< Имя второго узла, с которым связана ошибка */
+        QString path; /**< Путь для циклов/путь до файла, который не удалось открыть */
+        int line; /**< Номер строки, содержащей ошибку во входном файле (-1, если ошибка не относится к строке или нельзя однозначно утверждать принадлежность к какой-либо строке) */
 
+        /*! \brief Генерирует сообщение об ошибке.
+         *  \return Строка с текстом ошибки
+         */
         QString generateMessage() const
         {
             switch (type)
@@ -124,6 +165,11 @@ class Error
 
             return "";
         }
+        /*!
+         * \brief Оператор для сравнения двух ошибок.
+         * \param[in] other Ссылка на ошибку для сравнения
+         * \return true, если все поля совпадают; иначе - false
+         */
         bool operator==(const Error& other) const
         {
             return type == other.type &&
@@ -134,6 +180,12 @@ class Error
         };
 };
 
+/*!
+ * \brief Функция хэширования, для того, чтобы хранить QSet<Error>.
+ * \param[in] key Объект ошибки, для которого считается хэш
+ * \param[in] seed Начальное значение хэш-функции
+ * \return Вычисленное значение
+ */
 inline size_t qHash(const Error& key, size_t seed = 0)
 {
     return qHash(static_cast<int>(key.type), seed) ^
@@ -143,6 +195,9 @@ inline size_t qHash(const Error& key, size_t seed = 0)
            qHash(key.line, seed);
 }
 
+/*!
+ * \brief Перечисление для возможных статусов покрытия узла.
+ */
 enum CoverageStatus
 {
     NOT_COVERED,
@@ -150,16 +205,23 @@ enum CoverageStatus
     FULLY_COVERED
 };
 
+/*!
+ * \brief Структура с результатами парсинга входного файла (пустая,
+ * если были встречены ошибки SYNTAX_ERROR или FORBIDDEN_STRUCTURE_OR_FORM, так как не можем гарантировать корректность данных).
+ */
 struct ParseResult
 {
-    Node* root;
-    QMap<QString, Node*> allNodes;
+    Node* root; /**< Указатель на корень дерева */
+    QMap<QString, Node*> allNodes; /**< Словарь всех узлов дерева вида (Имя узла, указатель на узел) */
 };
 
+/*!
+ * \brief Структура с результатом проверки покрытия.
+ */
 struct Result
 {
-    QVector<Node*> valid;
-    QVector<Node*> missing;
+    QVector<Node*> valid; /**< Список корректных отмеченных узлов (выполняют свою работу по покрытию целевого узла) */
+    QVector<Node*> missing; /**< Список недостающих узлов для минимального покрытия целевого узла */
 };
 
 #endif // STRUCTURES_H
