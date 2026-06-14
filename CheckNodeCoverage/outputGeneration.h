@@ -2,11 +2,36 @@
 #define OUTPUTGENERATION_H
 #include "structures.h"
 
+/*!
+ * \file outputGeneration.h
+ * \brief Функции для создания выходных файлов
+ */
 
-// Функция для создания файла с отчетом
+
+/*!
+ * \brief Записывает отчет о работе программы в файл .txt.
+ * \param[in] outPath Путь к выходному файлу .txt
+ * \param[in] errors Набор ошибок
+ * \param[in] result Структура с результатом анализа покрытия
+ * \return true, если функция отработала в штатном режиме; иначе - false
+ */
 bool generateReport(const QString& outPath, const QSet<Error>& errors, const Result& result);
 
-// Функция для создания выходного файла .dot
+/*!
+ * \brief Записывает дерево с цветовой индикацией в файл .dot.
+ *
+ * Функция копирует структуру исходного графа и дописывает правила оформления для узлов.
+ * В зависимости от результатов анализа, вершины размечаются следующими цветами:
+ * - Зелёный — корректные узлы, делающие свою работу по покрытию целевого узла (result.valid);
+ * - Оранжевый — узлы, недостающие для покрытия целевого (result.missing);
+ * - Красный — ошибочные узлы (находящиеся вне поддерева цели или избыточные, которые берутся из набора ошибок).
+ *
+ * \param[in] outPath Путь к выходному файлу .dot
+ * \param[in,out] errors Набор ошибок
+ * \param[in,out] lines Массив строк исходного входного файла, в который будет добавлена цветовая индикация
+ * \param[in] result Структура с результатом анализа покрытия
+ * \return true, если функция отработала в штатном режиме; иначе - false
+ */
 bool generateOutputDOT(const QString& outPath, QSet<Error>& errors, QStringList& lines, const Result& result);
 
 #endif // OUTPUTGENERATION_H
