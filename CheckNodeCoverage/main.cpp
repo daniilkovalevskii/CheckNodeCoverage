@@ -5,6 +5,7 @@
 #include <structures.h>
 #include <QSet>
 #include <QDebug>
+#include <clocale>
 
 /*!
  * \mainpage Программа для проверки покрытия набором узлов целевого узла
@@ -41,6 +42,8 @@
 
 int main(int argc, char *argv[])
 {
+    std::setlocale(LC_ALL, "Russian");
+
     QCoreApplication a(argc, argv);
 
     // Проверка аргументов командной строки
