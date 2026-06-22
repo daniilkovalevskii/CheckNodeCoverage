@@ -165,6 +165,12 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
                     Node* parentNode = res.allNodes[parentName];
                     Node* childNode = res.allNodes[childName];
 
+                    // Если уже есть такой ребенок в списке детей - описана множественная связь, граф - не дерево
+                    if (parentNode->children.contains(childNode))
+                    {
+                        errors.insert(Error(ErrorType::SYNTAX_ERROR, "", "", "", lineNumber));
+                    }
+
                     if (!nodeAllParents[childName].contains(parentName))
                     {
                         // Если текущий родитель не зафиксирован в списке родителей узла - добавляем
