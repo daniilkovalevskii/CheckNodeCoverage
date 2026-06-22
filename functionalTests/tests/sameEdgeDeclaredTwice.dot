@@ -1,0 +1,7 @@
+digraph G {
+    Root [shape=diamond];
+    NodeA [shape=rectangle];
+    Root -> NodeA;
+    Root -> NodeA;
+    NodeA -> Leaf1;
+}

@@ -1,0 +1,5 @@
+digraph G {
+    Root -> NodeA;
+    NodeA -> Leaf1;
+    NodeA [shape=rectangle];
+}

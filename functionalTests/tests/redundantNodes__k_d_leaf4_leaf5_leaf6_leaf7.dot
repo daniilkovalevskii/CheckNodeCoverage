@@ -1,0 +1,33 @@
+digraph G {
+    root -> a -> b -> c -> d -> e;
+    b -> f -> g -> h;
+    f -> i -> j;
+    i -> k;
+    a -> l -> m -> n -> o;
+    n -> p;
+    n -> q;
+    n -> r;
+    root -> s -> t -> u;
+    root -> v;
+    root -> w;
+    b -> x;
+    e -> y;
+    e -> z -> leaf1;
+    p -> leaf2;
+    v -> leaf3;
+    w -> w1 -> w2 -> w3 -> w4 -> w5 -> leaf4;
+    w2 -> leaf5;
+    w5 -> leaf6;
+    w -> leaf7;
+    
+    b[shape = diamond];
+    k[shape = rectangle];
+    g[shape = rectangle];
+    c[shape = rectangle];
+    i[shape = rectangle];
+    d[shape = rectangle];
+    leaf4[shape = rectangle];
+    leaf5[shape = rectangle];
+    leaf6[shape = rectangle];
+    leaf7[shape = rectangle];
+}

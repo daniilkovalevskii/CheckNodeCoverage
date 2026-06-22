@@ -1,0 +1,35 @@
+digraph G {
+    main_root [shape=diamond];
+    main_root -> X1; 
+    main_root -> X2;
+    X1 -> X1_1; 
+    X1 -> X1_2; 
+    X1_1 -> leafX1; 
+    X1_2 -> leafX2;
+    X2 -> X2_1; 
+    X2 -> X2_2; 
+    X2_1 -> leafX3; 
+    X2_2 -> leafX4;
+
+    island1_root -> Y1; 
+    island1_root -> Y2;
+    Y1 -> Y1_1; 
+    Y1 -> Y1_2; 
+    Y1_1 -> leafY1; 
+    Y1_2 -> leafY2;
+    Y2 -> Y2_1; 
+    Y2 -> Y2_2; 
+    Y2_1 -> leafY3; 
+    Y2_2 -> leafY4;
+
+    island2_root -> Z1; 
+    island2_root -> Z2;
+    Z1 -> Z1_1; 
+    Z1 -> Z1_2; 
+    Z1_1 -> leafZ1; 
+    Z1_2 -> leafZ2;
+    Y2 -> Z2_1; 
+    Y2 -> Z2_2; 
+    Z2_1 -> leafZ3; 
+    Z2_2 -> leafZ4;
+}

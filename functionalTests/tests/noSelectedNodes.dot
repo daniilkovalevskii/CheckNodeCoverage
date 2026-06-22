@@ -1,0 +1,7 @@
+digraph tree {
+    Root [shape=diamond];
+    Root -> NodeA;
+    Root -> NodeB;
+    NodeA -> Leaf1;
+    NodeB -> Leaf2;
+}
