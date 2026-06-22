@@ -30,9 +30,9 @@ private slots:
         QTest::newRow("Тест 5: Компонента состоит из длинной цепочки") << EdgeList{{"a", "b"}, {"b", "c"}, {"c", "d"},
                                                                                                            {"d", "e"}, {"e", "f"}, {"f", "g"}, {"g", "h"}}
                                                                        << "g" << "a" << true;
-        QTest::newRow("Тест 6: Разветвленное дерево (запуск из глубокого листа)") << EdgeList{{"root", "left"}, {"root", "right"}, {"left", "leaf1"}, {"left", "leaf2"}}
+        QTest::newRow("Тест 6: Поиск корня в разветвленной компоненте") << EdgeList{{"root", "left"}, {"root", "right"}, {"left", "leaf1"}, {"left", "leaf2"}}
                                                                                   << "leaf2" << "root" << true;
-        QTest::newRow("Тест 7: Дерево переходящее в цикл (вход в петлю)") << EdgeList{{"a", "b"}, {"b", "c"}, {"c", "d"}, {"d", "b"}}
+        QTest::newRow("Тест 7: Граф переходит в цикл (вход в петлю)") << EdgeList{{"a", "b"}, {"b", "c"}, {"c", "d"}, {"d", "b"}}
                                                                           << "a" << "a" << true;
     }
 

@@ -62,7 +62,7 @@ private slots:
                                               << "a"
                                               << QSet<Error>{Error(ErrorType::CYCLE_ERROR, "", "", "a->b->c->d->e->f->g->h->i->j->a", -1)};
 
-        QTest::newRow("Тест 8: Дерево с ветвлением содержит цикл") << EdgeList{{"a", "b"},
+        QTest::newRow("Тест 8: Граф с ветвлением содержит цикл") << EdgeList{{"a", "b"},
                                                                                {"b", "c"},
                                                                                {"a", "d"},
                                                                                {"d", "e"},

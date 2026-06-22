@@ -46,7 +46,7 @@ private slots:
                                                                          Error(ErrorType::REDUNDANT_NODE, "e", "a", "", -1),
                                                                          Error(ErrorType::NO_TARGET)};
 
-        QTest::newRow("Тест 7: Цепочка отмеченных узлов") << QString("testData/dfsCoveredTest07.dot")
+        QTest::newRow("Тест 7: Отмеченные узлы глубоко в разных ветках") << QString("testData/dfsCoveredTest07.dot")
                                                           << "a"
                                                           << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "m", "a", "", -1),
                                                                          Error(ErrorType::REDUNDANT_NODE, "j", "a", "", -1),

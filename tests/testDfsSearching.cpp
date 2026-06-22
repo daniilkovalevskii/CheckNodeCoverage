@@ -54,7 +54,7 @@ private slots:
             << QStringList{"c", "n"}
             << QStringList{"d", "e", "m"} << noErrors;
 
-        QTest::newRow("Тест 10: Поддерево содержит частично покрытый узел, у которого есть полностью непокрытые дети и один покрытый ребенок")
+        QTest::newRow("Тест 10: Поддерево содержит частично покрытый узел, у которого есть полностью непокрытые дети и несколько покрытых детей")
             << "testData/dfsSearchingTest10.dot" << "target"
             << QStringList{"c", "n", "j", "k"}
             << QStringList{"d", "m"} << noErrors;
@@ -71,7 +71,7 @@ private slots:
                                                Error(ErrorType::REDUNDANT_NODE, "f", "d", "", -1),
                                                Error(ErrorType::REDUNDANT_NODE, "g", "d", "", -1)};
 
-        QTest::newRow("Тест 13: Есть несколько отмеченных узлов в поддереве уже отмеченного")
+        QTest::newRow("Тест 13: Есть отмеченные узлы в поддеревьях разных уже отмеченных узлов")
             << "testData/dfsSearchingTest13.dot" << "target"
             << QStringList{"b", "d"}
             << noMissing << QSet<Error>{Error(ErrorType::REDUNDANT_NODE, "g", "b", "", -1),

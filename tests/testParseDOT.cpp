@@ -24,7 +24,7 @@ private slots:
             << "testdata/parseTest02.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 15)} << QVector<ExpectedNodeProfile>{}
             << "";
 
-        QTest::newRow("Тест 3: Неподдерживаемые ключевые слова")
+        QTest::newRow("Тест 3: В описании графа используются неподдерживаемые ключевые слова")
             << "testdata/parseTest03.dot" << QSet<Error>{Error(ErrorType::FORBIDDEN_STRUCTURE_OR_FORM, "", "", "", 2),
                                                          Error(ErrorType::FORBIDDEN_STRUCTURE_OR_FORM, "", "", "", 7),
                                                          Error(ErrorType::FORBIDDEN_STRUCTURE_OR_FORM, "", "", "", 8)}
@@ -120,7 +120,7 @@ private slots:
                                             {"k", NodeShape::RECTANGLE, "j", {}}}
             << "a";
 
-        QTest::newRow("Тест 10: Пустой узел с последующей связью")
+        QTest::newRow("Тест 10: Создается пустой узел, а потом добавляется связь")
             << "testdata/parseTest10.dot" << noErrors
             << QVector<ExpectedNodeProfile>{{"a", NodeShape::DEFAULT, "", {"b", "c"}},
                                             {"b", NodeShape::DIAMOND, "a", {"g", "h", "i"}},
@@ -150,17 +150,17 @@ private slots:
                                             {"k", NodeShape::DEFAULT, "j", {}}}
             << "a";
 
-        QTest::newRow("Тест 12: Нет ';' в ребре")
+        QTest::newRow("Тест 12: Отсутствует точка с запятой в конце строки с объявлением ребра")
             << "testdata/parseTest12.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
 
-        QTest::newRow("Тест 13: Нет ';' в узле")
+        QTest::newRow("Тест 13: Отсутствует точка с запятой в конце строки с объявлением узла")
             << "testdata/parseTest13.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)}
             << QVector<ExpectedNodeProfile>{} << "";
 
-        QTest::newRow("Тест 14: Пробел в стрелке")
+        QTest::newRow("Тест 14: Есть пробел между частями стрелки при объявлении связи")
             << "testdata/parseTest14.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 2)} << QVector<ExpectedNodeProfile>{} << "";
 
-        QTest::newRow("Тест 15: Несколько разных ошибок")
+        QTest::newRow("Тест 15: Несколько ошибок разного типа")
             << "testdata/parseTest15.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 4),
                                                          Error(ErrorType::SYNTAX_ERROR, "", "", "", 15)}
             << QVector<ExpectedNodeProfile>{} << "";
@@ -176,7 +176,7 @@ private slots:
                                                          Error(ErrorType::NO_MARKED_NODES, "", "", "", -1)}
             << QVector<ExpectedNodeProfile>{} << "";
 
-        QTest::newRow("Тест 18: Форма после ребра")
+        QTest::newRow("Тест 18: Форма узла объявляется после объявления ребра с его участием")
             << "testdata/parseTest18.dot" << noErrors
             << QVector<ExpectedNodeProfile>{{"a", NodeShape::DIAMOND, "", {"b"}},
                                             {"b", NodeShape::RECTANGLE, "a", {}}}
