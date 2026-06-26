@@ -181,6 +181,33 @@ private slots:
             << QVector<ExpectedNodeProfile>{{"a", NodeShape::DIAMOND, "", {"b"}},
                                             {"b", NodeShape::RECTANGLE, "a", {}}}
             << "a";
+
+        QTest::newRow("Тест 19: Цикл")
+            << "testdata/parseTest19.dot" << noErrors
+            << QVector<ExpectedNodeProfile>{{"a", NodeShape::DIAMOND, "c", {"b"}},
+                                            {"b", NodeShape::RECTANGLE, "a", {"c"}},
+                                            {"c", NodeShape::RECTANGLE, "b", {"a"}}}
+            << "";
+
+        QTest::newRow("Тест 20: Корректное дерево")
+            << "testdata/parseTest20.dot" << noErrors
+            << QVector<ExpectedNodeProfile>{{"a", NodeShape::DEFAULT, "", {"b", "c"}},
+                                            {"b", NodeShape::DIAMOND, "a", {"g", "h", "i"}},
+                                            {"c", NodeShape::DEFAULT, "a", {"d", "e"}},
+                                            {"d", NodeShape::DEFAULT, "c", {"f"}},
+                                            {"e", NodeShape::DEFAULT, "c", {}},
+                                            {"f", NodeShape::DEFAULT, "d", {}},
+                                            {"g", NodeShape::RECTANGLE, "b", {}},
+                                            {"h", NodeShape::DEFAULT, "b", {"j"}},
+                                            {"i", NodeShape::RECTANGLE, "b", {}},
+                                            {"j", NodeShape::RECTANGLE, "h", {"k"}},
+                                            {"k", NodeShape::DEFAULT, "j", {}}}
+            << "a";
+
+        QTest::newRow("Тест 21: Открывающая фигурная скобка находится не на одной строке с digraph")
+            << "testdata/parseTest21.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 1)}
+            << QVector<ExpectedNodeProfile>{}
+            << "";
     }
 
     void testParseDOT()
@@ -201,7 +228,7 @@ private slots:
         if (actualErrors != expectedErrors)
         {
             showErrorLog(actualErrors, expectedErrors);
-            finalFailureMessages << "Ошибка: Набор ошибок не совпадает с ожидаемым!";
+            finalFailureMessages << "Ошибка: Набор ошибок не совпадает с ожидаемым";
             testPassed = false;
         }
 
@@ -228,29 +255,32 @@ private slots:
                 testPassed = false;
             }
         }
-        else if (!expectedTree.isEmpty())
+        else
         {
-            finalFailureMessages << "Ошибка: Парсер не построил дерево (root == nullptr), хотя ожидалось!";
+            // Если корень отсутствует, проверяем, ожидался ли он
+            if (!expectedRootName.isEmpty())
+            {
+                finalFailureMessages << "Ошибка: Ожидался корень '" + expectedRootName + "'";
+                testPassed = false;
+            }
+        }
+
+        // Если дерево не построено, хотя ожидалось
+        if (!expectedTree.isEmpty() && result.allNodes.isEmpty())
+        {
+            finalFailureMessages << "Ошибка: Парсер не построил дерево, хотя ожидалось";
             testPassed = false;
         }
 
         // Проверка на мусор в allNodes при пустом корне
-        if (result.root == nullptr && !result.allNodes.isEmpty())
+        if (result.root == nullptr && !result.allNodes.isEmpty() && !expectedRootName.isEmpty())
         {
-            finalFailureMessages << QString("Ошибка: root равен nullptr, но карта allNodes содержит %1 узлов!")
+            finalFailureMessages << QString("Ошибка: root равен nullptr, но карта allNodes содержит %1 узлов")
                                         .arg(result.allNodes.size());
             testPassed = false;
         }
 
         // Очистка памяти
-        for (Node* node : result.allNodes)
-        {
-            if (node)
-            {
-                node->children.clear();
-                node->parent = nullptr;
-            }
-        }
         qDeleteAll(result.allNodes);
 
         // Выводим все собранные ошибки

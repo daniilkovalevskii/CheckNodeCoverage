@@ -86,8 +86,12 @@ private slots:
 
         // Строим дерево
         QMap<QString, Node*> nodes;
+        // Если граф состоит из одного узла
         if (edges.isEmpty())
-            nodes.insert(startNode, new Node(startNode));
+        {
+            if (!startNode.isEmpty())
+                nodes.insert(startNode, new Node(startNode));
+        }
         else
             buildTree(edges, nodes);
 
@@ -115,14 +119,7 @@ private slots:
             }
         }
 
-        for (Node* node : nodes)
-        {
-            if (node)
-            {
-                node -> children.clear();
-                node -> parent = nullptr;
-            }
-        }
+        // Очистка памяти
         qDeleteAll(nodes);
 
         if (!testPassed)

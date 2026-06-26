@@ -1,0 +1,17 @@
+digraph Tree 
+{
+    a -> b;
+    a -> c;
+    c -> d;
+    c -> e;
+    d -> f;
+    b -> g;
+    b -> h;
+    b -> i;
+    h -> j;
+    j -> k;
+    i[shape=rectangle];
+    j[shape=rectangle];
+    g[shape=rectangle];
+    b[shape = diamond];
+}

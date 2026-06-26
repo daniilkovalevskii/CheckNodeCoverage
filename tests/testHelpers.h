@@ -13,19 +13,22 @@ Q_DECLARE_METATYPE(EdgeList)
 QStringList readDotFile(const QString& relativePath)
 {
     QString fullPath = QFINDTESTDATA(relativePath);
-    if (fullPath.isEmpty()) {
+    if (fullPath.isEmpty())
+    {
         fullPath = QCoreApplication::applicationDirPath() + "/" + relativePath;
     }
 
     QFile file(fullPath);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         qWarning() << "Не удалось открыть тестовый файл:" << fullPath;
         return QStringList();
     }
 
     QTextStream in(&file);
     QStringList lines;
-    while (!in.atEnd()) {
+    while (!in.atEnd())
+    {
         lines.append(in.readLine());
     }
     return lines;
@@ -102,9 +105,12 @@ void showErrorLog(const QSet<Error>& actual, const QSet<Error>& expected)
             QString desc = QString("Тип: %1, Строка: %2")
                                .arg(errorTypeToString(e.type))
                                .arg(e.line);
-            if (!e.nodeName.isEmpty()) desc += ", Узел: " + e.nodeName;
-            if (!e.relatedNodeName.isEmpty()) desc += " -> " + e.relatedNodeName;
-            if (!e.path.isEmpty()) desc += ", Путь: " + e.path;
+            if (!e.nodeName.isEmpty())
+                desc += ", Узел: " + e.nodeName;
+            if (!e.relatedNodeName.isEmpty())
+                desc += " -> " + e.relatedNodeName;
+            if (!e.path.isEmpty())
+                desc += ", Путь: " + e.path;
 
             unexpected << desc;
         }
@@ -119,6 +125,7 @@ void showErrorLog(const QSet<Error>& actual, const QSet<Error>& expected)
             qWarning().noquote() << missing.at(i);
         }
     }
+
     if (!unexpected.isEmpty())
     {
         qWarning().noquote() << "--- НЕОЖИДАННЫЕ ОШИБКИ ---";
@@ -153,7 +160,8 @@ Node* buildTree(const QVector<QPair<QString, QString>>& edges, QMap<QString, Nod
 
     for (Node* node : outNodes)
     {
-        if (node->parent == nullptr) {
+        if (node->parent == nullptr)
+        {
             return node;
         }
     }
@@ -236,7 +244,8 @@ bool treeMatchesExpectedProfile(const QMap<QString, Node*>& allNodes,
             actualChildrenNames.sort();
             expectedChildrenNames.sort();
 
-            if (actualChildrenNames != expectedChildrenNames) {
+            if (actualChildrenNames != expectedChildrenNames)
+            {
                 errorList << QString("Узел '%1': списки детей не совпадают (ожид. [%2], пол. [%3])")
                                  .arg(profile.name)
                                  .arg(expectedChildrenNames.join(", "))
@@ -248,7 +257,7 @@ bool treeMatchesExpectedProfile(const QMap<QString, Node*>& allNodes,
     // Формируем итоговый результат
     if (!errorList.isEmpty())
     {
-        outError = errorList.join(" | ");
+        outError = errorList.join("\n");
         return false;
     }
 

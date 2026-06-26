@@ -1,0 +1,7 @@
+digraph G {
+    a -> b;
+    b -> c;
+    c -> a;
+    a [shape=diamond];
+    b [shape=rectangle];
+}

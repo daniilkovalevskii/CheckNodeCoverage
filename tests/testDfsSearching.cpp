@@ -99,70 +99,64 @@ private slots:
         QSet<Error> actualErrors;
         ParseResult res = parseDOT(lines, actualErrors);
 
-        Node* targetPtr = res.allNodes.value(targetNodeName);
-        if (!targetPtr)
+        if (actualErrors.isEmpty())
         {
-            msgs << QString("Не найдено переданного отмеченного узла %1 в графе").arg(targetNodeName);
-            testPassed = false;
-        }
-        else
-        {
-            Result ans;
-            dfsSearching(targetPtr, actualErrors, ans);
-
-            QStringList actualValidNames;
-            for (Node* n : ans.valid)
+            Node* targetPtr = res.allNodes.value(targetNodeName);
+            if (targetPtr == nullptr)
             {
-                if (n)
+                msgs << QString("Не найдено переданного отмеченного узла %1 в графе").arg(targetNodeName);
+                testPassed = false;
+            }
+            else
+            {
+                Result ans;
+                dfsSearching(targetPtr, actualErrors, ans);
+
+                // Собираем имена недостающих и корректных узлов, полученных от функции
+                QStringList actualValidNames;
+                for (Node* n : ans.valid)
+                {
                     actualValidNames.append(n->name);
-            }
+                }
 
-            QStringList actualMissingNames;
-            for (Node* n : ans.missing)
-            {
-                if (n)
+                QStringList actualMissingNames;
+                for (Node* n : ans.missing)
+                {
                     actualMissingNames.append(n->name);
-            }
+                }
 
-            actualValidNames.sort();
-            actualMissingNames.sort();
-            expValidNodeNames.sort();
-            expMissingNodeNames.sort();
+                actualValidNames.sort();
+                actualMissingNames.sort();
+                expValidNodeNames.sort();
+                expMissingNodeNames.sort();
 
-            // Проверяем валидные узлы
-            if (actualValidNames != expValidNodeNames)
-            {
-                msgs << QString("Несовпадение валидных узлов. Ожидалось: [%1], Получено: [%2]")
-                            .arg(expValidNodeNames.join(", "), actualValidNames.join(", "));
-                testPassed = false;
-            }
+                // Проверяем валидные узлы
+                if (actualValidNames != expValidNodeNames)
+                {
+                    msgs << QString("Несовпадение валидных узлов. Ожидалось: [%1], Получено: [%2]")
+                                .arg(expValidNodeNames.join(", "), actualValidNames.join(", "));
+                    testPassed = false;
+                }
 
-            // Проверяем недостающие узлы для покрытия
-            if (actualMissingNames != expMissingNodeNames)
-            {
-                msgs << QString("Несовпадение недостающих узлов покрытия. Ожидалось: [%1], Получено: [%2]")
-                            .arg(expMissingNodeNames.join(", "), actualMissingNames.join(", "));
-                testPassed = false;
+                // Проверяем недостающие узлы для покрытия
+                if (actualMissingNames != expMissingNodeNames)
+                {
+                    msgs << QString("Несовпадение недостающих узлов покрытия. Ожидалось: [%1], Получено: [%2]")
+                                .arg(expMissingNodeNames.join(", "), actualMissingNames.join(", "));
+                    testPassed = false;
+                }
             }
+        }
 
-            // Проверяем наборы ошибок
-            if (actualErrors != expErrors)
-            {
-                showErrorLog(actualErrors, expErrors);
-                msgs << "Полученный набор ошибок избыточности покрытия не совпадает с ожидаемым";
-                testPassed = false;
-            }
+        // Проверяем наборы ошибок
+        if (actualErrors != expErrors)
+        {
+            showErrorLog(actualErrors, expErrors);
+            msgs << "Полученный набор ошибок избыточности покрытия не совпадает с ожидаемым";
+            testPassed = false;
         }
 
         // Очистка памяти
-        for (Node* node : res.allNodes)
-        {
-            if (node)
-            {
-                node->children.clear();
-                node->parent = nullptr;
-            }
-        }
         qDeleteAll(res.allNodes);
 
         if (!testPassed)

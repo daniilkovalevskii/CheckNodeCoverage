@@ -60,21 +60,29 @@ private slots:
         QFETCH(QSet<Error>,expErrors);
 
         QStringList lines = readDotFile(filePath);
+        if (lines.isEmpty())
+        {
+            QFAIL(qPrintable(QString("Не удалось прочитать или файл пуст: %1").arg(filePath)));
+            return;
+        }
+
         QSet<Error> actualErrors;
         ParseResult parsed = parseDOT(lines, actualErrors);
 
         bool testPassed = true;
         QStringList msgs;
 
-        bool hasSyntaxError = false;
+        bool hasErrorAfterParsing = false;
+        // Исключаются только эти ошибки парсинга, т.к. строятся деревья без целевых узлов
         for (const Error& err : actualErrors) {
-            if (err.type == ErrorType::SYNTAX_ERROR || err.type == ErrorType::FORBIDDEN_STRUCTURE_OR_FORM) {
-                hasSyntaxError = true;
+            if (err.type == ErrorType::SYNTAX_ERROR || err.type == ErrorType::FORBIDDEN_STRUCTURE_OR_FORM
+                || err.type == ErrorType::MULTI_PARENT) {
+                hasErrorAfterParsing = true;
                 break;
             }
         }
 
-        if (!hasSyntaxError)
+        if (!hasErrorAfterParsing)
         {
             Node* activeMarkedPtr = parsed.allNodes.value(activeMarkedNode);
 

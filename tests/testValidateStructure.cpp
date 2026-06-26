@@ -139,11 +139,6 @@ private slots:
         }
 
         // Очищаем память
-        for (Node* node : nodes)
-        {
-            node -> children.clear();
-            node -> parent = nullptr;
-        }
         qDeleteAll(nodes);
 
         // Выводим ошибки

@@ -32,8 +32,14 @@ private slots:
                                                                        << "g" << "a" << true;
         QTest::newRow("Тест 6: Поиск корня в разветвленной компоненте") << EdgeList{{"root", "left"}, {"root", "right"}, {"left", "leaf1"}, {"left", "leaf2"}}
                                                                                   << "leaf2" << "root" << true;
-        QTest::newRow("Тест 7: Граф переходит в цикл (вход в петлю)") << EdgeList{{"a", "b"}, {"b", "c"}, {"c", "d"}, {"d", "b"}}
-                                                                          << "a" << "a" << true;
+
+        QTest::newRow("Тест 7: Цикл с выходом в одну вершину, от которой запускается функция") << EdgeList{{"a", "b"}, {"b", "c"}, {"c", "d"}, {"c", "a"}}
+                                                                      << "d" << "c" << false;
+
+        QTest::newRow("Тест 8: Большая компонента с ветвлением и циклом") << EdgeList{{"a", "b"}, {"b", "c"}, {"a", "d"}, {"d", "e"},
+                                                                             {"d", "f"}, {"f", "g"}, {"g", "h"}, {"h", "i"},
+                                                                             {"h", "j"}, {"h", "k"}, {"j", "l"}, {"l", "a"}}
+                                                                        << "c" << "a" << false;
     }
 
     void testFindComponentRoot()
@@ -48,14 +54,19 @@ private slots:
 
         Node* startNode = nodes.value(startNodeName);
 
-        // Флаги для накопления результатов проверки
+        // Флаг для накопления результатов проверки
         bool testPassed = true;
         QString failureMessage;
+
+        if (edges.isEmpty())
+        {
+            QFAIL("Ошибка теста: Список ребер пуст, невозможно построить граф");
+        }
 
         if (startNode == nullptr)
         {
             testPassed = false;
-            failureMessage = "Стартовый узел '" + startNodeName + "' не найден в построенном графе!";
+            failureMessage = "Стартовый узел '" + startNodeName + "' не найден в построенном графе";
         }
         else
         {
@@ -65,34 +76,21 @@ private slots:
             // Запускаем алгоритм
             bool actualResult = findComponentRoot(startNode, visited, actualRoot);
 
-            if (actualRoot == nullptr)
+            if (actualRoot->name != expectedRootName)
             {
                 testPassed = false;
-                failureMessage = "Алгоритм вернул actualRoot == nullptr!";
-            }
-            else if (actualRoot->name != expectedRootName)
-            {
-                testPassed = false;
-                failureMessage = QString("Неверный корень! Ожидался '%1', получен '%2'")
+                failureMessage = QString("Неверный корень. Ожидался '%1', получен '%2'")
                                      .arg(expectedRootName).arg(actualRoot->name);
             }
             else if (actualResult != result)
             {
                 testPassed = false;
-                failureMessage = QString("Возвращенный флаг (bool) не совпадает! Ожидался %1, получен %2")
+                failureMessage = QString("Возвращенный флаг (bool) не совпадает. Ожидался %1, получен %2")
                                      .arg(result).arg(actualResult);
             }
         }
 
         // Очистка памяти
-        for (Node* node : nodes)
-        {
-            if (node)
-            {
-                node->children.clear();
-                node->parent = nullptr;
-            }
-        }
         qDeleteAll(nodes);
 
         if (!testPassed)
