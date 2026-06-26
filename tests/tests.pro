@@ -11,6 +11,7 @@ SOURCES += allTests.cpp testParseDOT.cpp testFindComponentRoot.cpp \
     testDfsCovered.cpp \
     testDfsSearching.cpp \
     testDfsValidate.cpp \
+    testHelpers.cpp \
     testValidateStructure.cpp
 
 HEADERS += ../CheckNodeCoverage/inputProcessing.h \
