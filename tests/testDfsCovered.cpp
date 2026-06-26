@@ -76,7 +76,8 @@ private slots:
         // Исключаются только эти ошибки парсинга, т.к. строятся деревья без целевых узлов
         for (const Error& err : actualErrors) {
             if (err.type == ErrorType::SYNTAX_ERROR || err.type == ErrorType::FORBIDDEN_STRUCTURE_OR_FORM
-                || err.type == ErrorType::MULTI_PARENT) {
+                || err.type == ErrorType::MULTI_PARENT)
+            {
                 hasErrorAfterParsing = true;
                 break;
             }

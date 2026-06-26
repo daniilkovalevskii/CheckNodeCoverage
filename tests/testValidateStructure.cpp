@@ -122,7 +122,9 @@ private slots:
         // Ищем указатель на корень
         Node* rootPtr = nullptr;
         if (!rootName.isEmpty())
+        {
             rootPtr = nodes.value(rootName);
+        }
 
         QSet<Error> actualErrors;
         validateStructure(rootPtr, actualErrors, nodes);

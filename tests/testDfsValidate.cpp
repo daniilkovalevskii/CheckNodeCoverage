@@ -90,10 +90,14 @@ private slots:
         if (edges.isEmpty())
         {
             if (!startNode.isEmpty())
+            {
                 nodes.insert(startNode, new Node(startNode));
+            }
         }
         else
+        {
             buildTree(edges, nodes);
+        }
 
         Node* startNodePtr = nodes.value(startNode);
         bool testPassed = true;
@@ -123,7 +127,9 @@ private slots:
         qDeleteAll(nodes);
 
         if (!testPassed)
+        {
             QFAIL(qPrintable(msgs.join("\n")));
+        }
     }
 };
 

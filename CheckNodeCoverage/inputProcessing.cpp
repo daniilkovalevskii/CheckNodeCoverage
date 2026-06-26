@@ -61,7 +61,9 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
         QString line = lines.at(i).trimmed();
         // Пропуск пустых строк
         if (line.isEmpty())
+        {
             continue;
+        }
 
         // Проверяем наличие объявления графа
         if (headerRegex.match(line).hasMatch())
@@ -80,7 +82,9 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
 
     // Если нет объявления - не можем отвечать за корректность парсинга - прекращаем его
     if (!hasHeader)
+    {
         return res;
+    }
 
     bool hasClosing = false;
     bool hasSyntaxError = !errors.isEmpty();
@@ -98,7 +102,9 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
         int lineNumber = i + 1;
 
         if (line.isEmpty())
+        {
             continue;
+        }
 
         // Проверяем закрывающую скобку графа, если не во вложенной структуре
         if (closingRegex.match(line).hasMatch() && subgraphDepth == 0)
@@ -123,7 +129,9 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
             // Пропускаем вложенные строки, если внутри запрещенной структуры
             subgraphDepth += opens - closes;
             if (subgraphDepth < 0)
+            {
                 subgraphDepth = 0;
+            }
         }
         else
         {
@@ -148,9 +156,13 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
 
                     // Фиксируем порядок появления узлов в файле
                     if (!fileOrderNodes.contains(parentName))
+                    {
                         fileOrderNodes.append(parentName);
+                    }
                     if (!fileOrderNodes.contains(childName))
+                    {
                         fileOrderNodes.append(childName);
+                    }
 
                     // Если узлов еще нет в общем словаре - создаем их
                     if (!res.allNodes.contains(parentName))
@@ -197,7 +209,9 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors)
                 QString nodeName = nodeMatch.captured(1);
                 // Фиксируем появление в файле, если раньше не видели такого узла
                 if (!fileOrderNodes.contains(nodeName))
+                {
                     fileOrderNodes.append(nodeName);
+                }
 
                 // Добавляем в словарь, если такого узла не было
                 if (!res.allNodes.contains(nodeName))

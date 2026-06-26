@@ -87,11 +87,17 @@ void showErrorLog(const QSet<Error>& actual, const QSet<Error>& expected)
                                .arg(errorTypeToString(e.type))
                                .arg(e.line);
             if (!e.nodeName.isEmpty())
+            {
                 desc += ", Узел: " + e.nodeName;
+            }
             if (!e.relatedNodeName.isEmpty())
+            {
                 desc += " -> " + e.relatedNodeName;
+            }
             if (!e.path.isEmpty())
+            {
                 desc += ", Путь: " + e.path;
+            }
 
             missing << desc;
         }
@@ -106,11 +112,17 @@ void showErrorLog(const QSet<Error>& actual, const QSet<Error>& expected)
                                .arg(errorTypeToString(e.type))
                                .arg(e.line);
             if (!e.nodeName.isEmpty())
+            {
                 desc += ", Узел: " + e.nodeName;
+            }
             if (!e.relatedNodeName.isEmpty())
+            {
                 desc += " -> " + e.relatedNodeName;
+            }
             if (!e.path.isEmpty())
+            {
                 desc += ", Путь: " + e.path;
+            }
 
             unexpected << desc;
         }
@@ -144,9 +156,13 @@ Node* buildTree(const QVector<QPair<QString, QString>>& edges, QMap<QString, Nod
     for (const auto& edge : edges)
     {
         if (!outNodes.contains(edge.first))
+        {
             outNodes[edge.first] = new Node(edge.first);
+        }
         if (!outNodes.contains(edge.second))
+        {
             outNodes[edge.second] = new Node(edge.second);
+        }
 
         Node* parent = outNodes[edge.first];
         Node* child = outNodes[edge.second];
@@ -202,9 +218,13 @@ bool treeMatchesExpectedProfile(const QMap<QString, Node*>& allNodes,
         QStringList missing = (expectedNames - actualNames).values();
         QStringList unexpected = (actualNames - expectedNames).values();
         if (!missing.isEmpty())
+        {
             errorList << "Отсутствуют: " + missing.join(", ");
+        }
         if (!unexpected.isEmpty())
+        {
             errorList << "Лишние: " + unexpected.join(", ");
+        }
     }
 
     // Проверяем свойства каждого ожидаемого узла
@@ -236,7 +256,9 @@ bool treeMatchesExpectedProfile(const QMap<QString, Node*>& allNodes,
             for (Node* child : n->children)
             {
                 if (child)
+                {
                     actualChildrenNames << child->name;
+                }
             }
 
             // Создаем копию для сортировки
