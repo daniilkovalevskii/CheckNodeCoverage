@@ -10,7 +10,7 @@
 /*!
  * \brief Построчно считывает файл в массив строк.
  * \param[in] filepath Путь к входному файлу.
- * \param[in,out] errors Набор ошибок.
+ * \param[out] errors Набор ошибок.
  * \return Массив строк с содержимым файла.
  *
  * \pre Путь к файлу \c filepath не должен быть пустым.
@@ -21,7 +21,7 @@ QStringList readFile(const QString& filepath, QSet<Error>& errors);
 /*!
  * \brief Программно строит дерево, описанное в массиве строк.
  * \param[in] lines Массив строк входного файла.
- * \param[in,out] errors Набор ошибок.
+ * \param[out] errors Набор ошибок.
  * \return Структура с результатами парсинга (указатель на корень и словарь узлов дерева).
  *
  * \pre Контейнер \c lines должен содержать корректно считанные строки.
@@ -34,7 +34,7 @@ ParseResult parseDOT(const QStringList& lines, QSet<Error>& errors);
  * \param[in] node Узел, с которого начинается проверка.
  * \param[in,out] visited Множество уже посещенных узлов в ходе проверки на циклы.
  * \param[in,out] stack Стек для хранения пути цикла.
- * \param[in,out] errors Набор ошибок.
+ * \param[out] errors Набор ошибок.
  *
  * \pre Указатель \c node должен быть валидным и не равным \c nullptr.
  * \post Обходит граф в глубину. При обнаружении цикла записывает ошибку \c CYCLE_ERROR в набор \c errors и формирует путь в \c stack.
@@ -56,7 +56,7 @@ bool findComponentRoot(Node* node, const QSet<Node*>& visited, Node*& outRoot);
 /*!
  * \brief Проверяет граф на циклы и связность.
  * \param[in] root Указатель на корень (\c nullptr, если в ходе парсинга не было найдено корня).
- * \param[in,out] errors Набор ошибок.
+ * \param[out] errors Набор ошибок.
  * \param[in] allNodes Словарь всех узлов.
  *
  * \pre Контейнер \c allNodes должен содержать все распарсенные узлы графа для проверки связности.
