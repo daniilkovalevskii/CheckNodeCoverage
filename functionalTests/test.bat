@@ -4,7 +4,7 @@ chcp 65001 > nul
 setlocal enabledelayedexpansion
 
 :: НАСТРОЙКИ ПУТЕЙ
-set "EXE_PATH=..\..\executable\CheckNodeCoverage.exe"
+set "EXE_PATH=C:\checkNodeCoverage\CheckNodeCoverage\build\Desktop_Qt_6_10_2_MinGW_64_bit-Debug\CheckNodeCoverage\debug\CheckNodeCoverage.exe"
 set "TESTS_DIR=.\tests"
 set "EXPECTED_DIR=.\expected"
 set "OUT_DIR=.\tests_output"
@@ -30,7 +30,31 @@ if not exist "%EXPECTED_DIR%"  ( echo [ОШИБКА] Папка с эталон�
 if "%ENV_OK%"=="1" (
     set /a total_tests=0
     set /a passed_tests=0
+	
+	:: ==================================================
+    :: Валидация аргументов (Вызов без параметров)
+    :: ==================================================
+    set /a total_tests+=1
+    (
+    echo.
+    echo --------------------------------------------------
+    echo [ТЕСТ] Проверка: Валидация аргументов командной строки
+    ) >> "%SUMMARY_FILE%"
 
+    "%EXE_PATH%" > nul 2>&1
+    if "!errorlevel!"=="1" (
+        set /a passed_tests+=1
+        (
+        echo   [ОК] Программа успешно отклонила неполный список аргументов.
+        echo   -^> ТЕСТ ПРОЙДЕН
+        ) >> "%SUMMARY_FILE%"
+    ) else (
+        (
+        echo   [^<-^] ОШИБКА: Программа не вернула код ошибки 1 при отсутствии аргументов.
+        echo   -^> ^[^<-^]^ СБОЙ ТЕСТА
+        ) >> "%SUMMARY_FILE%"
+    )
+	
     :: Перебираем ВСЕ .dot файлы в папке tests
     for %%F in ("%TESTS_DIR%\*.dot") do (
         set /a total_tests+=1
