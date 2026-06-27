@@ -31,12 +31,9 @@ public:
      *  \param[in] newName Имя узла.
      *  \param[in] newShape Форма узла (по умолчанию выставляется \c DEFAULT).
      */
-    Node(QString newName, NodeShape newShape = NodeShape::DEFAULT)
+    explicit Node(QString newName, NodeShape newShape = NodeShape::DEFAULT)
+        :name(newName), shape(newShape), parent(nullptr)
     {
-        name = newName;
-        shape = newShape;
-
-        parent = nullptr;
     };
 
     /*!
@@ -106,13 +103,9 @@ public:
          *  \param[in] newPath Путь для циклов/путь до файла, который не удалось открыть.
          *  \param[in] newLine Номер строки, содержащей ошибку во входном файле (\c -1, если ошибка не относится к строке или нельзя однозначно утверждать принадлежность к какой-либо строке).
          */
-    Error(ErrorType newType, QString nodeName1 = "", QString nodeName2 = "", QString newPath = "", int newLine = -1)
+    explicit Error(ErrorType newType, QString nodeName1 = "", QString nodeName2 = "", QString newPath = "", int newLine = -1)
+        :type(newType), nodeName(nodeName1), relatedNodeName(nodeName2), path(newPath), line(newLine)
     {
-        type = newType;
-        nodeName = nodeName1;
-        relatedNodeName = nodeName2;
-        path = newPath;
-        line = newLine;
     };
 
     ErrorType type; /**< Тип ошибки (хранится в перечислении \c ErrorType). */
