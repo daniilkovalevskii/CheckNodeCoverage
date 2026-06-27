@@ -210,7 +210,7 @@ private slots:
             << "";
 
         QTest::newRow("Тест 22: Дублирование ребра связи")
-            << "testdata/parseTest22.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 3),
+            << "testdata/parseTest22.dot" << QSet<Error>{Error(ErrorType::MULTI_PARENT, "b", "", "",-1),
                                                          Error(ErrorType::NO_TARGET, "", "", "", -1)}
             << QVector<ExpectedNodeProfile>{{"a", NodeShape::DEFAULT, "", {"b"}},
                                             {"b", NodeShape::RECTANGLE, "a", {}}}

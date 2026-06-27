@@ -92,7 +92,7 @@ void linkParentChild(ParseContext& ctx, const QString& parentName, const QString
     // Если уже есть такой ребенок в списке детей - описана множественная связь, граф - не дерево
     if (parentNode->children.contains(childNode))
     {
-        ctx.errors.insert(Error(ErrorType::SYNTAX_ERROR, "", "", "", lineNumber));
+        ctx.errors.insert(Error(ErrorType::MULTI_PARENT, childName, "", "", -1));
     }
 
     if (!ctx.nodeAllParents[childName].contains(parentName))
