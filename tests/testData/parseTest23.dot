@@ -1,0 +1,5 @@
+digraph G {
+    a [label="only_label"];
+    a -> b;
+    b [shape=rectangle];
+}

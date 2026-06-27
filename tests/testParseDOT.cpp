@@ -208,6 +208,30 @@ private slots:
             << "testdata/parseTest21.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 1)}
             << QVector<ExpectedNodeProfile>{}
             << "";
+
+        QTest::newRow("Тест 22: Дублирование ребра связи")
+            << "testdata/parseTest22.dot" << QSet<Error>{Error(ErrorType::SYNTAX_ERROR, "", "", "", 3),
+                                                         Error(ErrorType::NO_TARGET, "", "", "", -1)}
+            << QVector<ExpectedNodeProfile>{{"a", NodeShape::DEFAULT, "", {"b"}},
+                                            {"b", NodeShape::RECTANGLE, "a", {}}}
+            << "a";
+
+        QTest::newRow("Тест 23: Есть квадратные скобки, но нет атрибута shape")
+            << "testdata/parseTest23.dot" << QSet<Error>{Error(ErrorType::FORBIDDEN_STRUCTURE_OR_FORM, "a", "", "", 2),
+                                                         Error(ErrorType::NO_TARGET, "", "", "", -1)}
+            << QVector<ExpectedNodeProfile>{{"a", NodeShape::DEFAULT, "", {"b"}},
+                                            {"b", NodeShape::RECTANGLE, "a", {}}}
+            << "a";
+
+        QTest::newRow("Тест 24: Абсолютно пустой файл")
+            << "testdata/parseTest24.dot" << QSet<Error>{}
+            << QVector<ExpectedNodeProfile>{}
+            << "";
+
+        QTest::newRow("Тест 25: Избыточные закрывающие скобки подграфа")
+            << "testdata/parseTest25.dot" << QSet<Error>{Error(ErrorType::FORBIDDEN_STRUCTURE_OR_FORM, "", "", "", 2)}
+            << QVector<ExpectedNodeProfile>{}
+            << "";
     }
 
     void testParseDOT()

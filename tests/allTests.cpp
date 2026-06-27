@@ -6,6 +6,7 @@
 #include "testDfsCovered.cpp"
 #include "testDfsSearching.cpp"
 #include "testDfsAbove.cpp"
+#include "testParseDOTUnits.cpp"
 
 int main(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
@@ -31,6 +32,9 @@ int main(int argc, char* argv[]) {
 
     TestDfsAbove testDfsAbove;
     result |= QTest::qExec(&testDfsAbove, argc, argv);
+
+    TestParseDOTUnits testParseDOTUnits;
+    result |= QTest::qExec(&testParseDOTUnits, argc, argv);
 
     return result;
 }
