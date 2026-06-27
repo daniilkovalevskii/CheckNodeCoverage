@@ -42,6 +42,6 @@ CoverageStatus dfsSearching(Node* node, QSet<Error>& errors, Result& result);
  * \pre Переданный узел \c node валиден и не равен \c nullptr. Параметр \c activeMarked указывает на вышестоящий отмеченный узел.
  * \post Сканирует поддерево ниже \c activeMarked. Любой встреченный прямоугольный узел регистрирует как избыточный и добавляет в \c errors запись \c ErrorType::REDUNDANT_NODE.
  */
-void dfsCovered(Node* node, Node* activeMarked, QSet<Error>& errors);
+void dfsCovered(const Node* node, const Node* activeMarked, QSet<Error>& errors);
 
 #endif // COVERAGEANALYSIS_H

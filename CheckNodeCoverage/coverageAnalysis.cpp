@@ -71,10 +71,10 @@ CoverageStatus dfsSearching(Node* node, QSet<Error>& errors, Result& result)
     return PARTIALLY_COVERED;
 }
 
-void dfsCovered(Node* node, Node* activeMarked, QSet<Error>& errors)
+void dfsCovered(const Node* node, const Node* activeMarked, QSet<Error>& errors)
 {
     // Для каждого ребенка текущего узла
-    for (Node* child : node->children)
+    for (const Node* child : node->children)
     {
         // Если ребенок отмечен(имеет форму rectangle), добавляем ошибку
         if (child->shape == NodeShape::RECTANGLE)
